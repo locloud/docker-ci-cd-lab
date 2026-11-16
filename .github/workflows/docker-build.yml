@@ -30,4 +30,6 @@ jobs:
         with:
           context: .
           push: ${{ github.event_name == 'push' }}
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/docker-ci-cd-lab:latest
+          tags: |
+            ${{ secrets.DOCKERHUB_USERNAME }}/docker-ci-cd-lab:latest
+            ${{ secrets.DOCKERHUB_USERNAME }}/docker-ci-cd-lab:${{ github.sha }}
