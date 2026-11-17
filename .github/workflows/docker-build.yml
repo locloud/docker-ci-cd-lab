@@ -37,9 +37,29 @@ jobs:
         with:
           dockerfile: Dockerfile
 
+  grype:
+    name: Scan Docker Image
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+
+      - name: Build Docker image for scanning
+        run: docker build -t docker-ci-cd-lab:${{ github.sha }} .
+
+      - name: Scan image with Grype
+        uses: anchore/scan-action@27805bf3b4e84b4a5c980df22ed233c00390a439
+        with:
+          image: docker-ci-cd-lab:${{ github.sha }}
+          grype-version: v0.122.0
+          output-format: table
+          severity-cutoff: high
+          fail-build: true
+
   build-and-push:
     name: Build and Push
-    needs: [tests, hadolint]
+    needs: [tests, hadolint, grype]
     runs-on: ubuntu-latest
 
     steps:
