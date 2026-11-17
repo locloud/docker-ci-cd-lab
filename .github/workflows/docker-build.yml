@@ -24,9 +24,22 @@ jobs:
       - name: Run tests
         run: python -m unittest discover -s tests -v
 
+  hadolint:
+    name: Lint Dockerfile
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Run Hadolint
+        uses: hadolint/hadolint-action@v3.5.0
+        with:
+          dockerfile: Dockerfile
+
   build-and-push:
     name: Build and Push
-    needs: tests
+    needs: [tests, hadolint]
     runs-on: ubuntu-latest
 
     steps:
